@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <map>
 #include <algorithm>
 
 using namespace std;
@@ -45,14 +46,47 @@ long distance(vector<long> &va, vector<long> &vb)
     return total;
 }
 
+void occurence(vector<long> &vec, map<long, int> &occ)
+{
+    for (long v : vec)
+    {
+        if (occ.count(v))
+        {
+            occ[v] = ++occ[v];
+        }
+        else
+        {
+            occ.insert(std::make_pair(v, 1));
+        }
+    }
+}
+
+long similarity(vector<long> &vec, map<long, int> &occ)
+{
+    long sim = 0;
+    for (long v : vec)
+    {
+        if (occ.count(v))
+        {
+            sim += v * occ[v];
+        }
+    }
+    return sim;
+}
+
 int main()
 {
     vector<long> va, vb;
+    map<long, int> bOccurence;
     readInput(va, vb);
 
     std::sort(va.begin(), va.end());
     std::sort(vb.begin(), vb.end());
 
-    cout << distance(va, vb) << endl;
+    cout << "distance: " << distance(va, vb) << endl;
+
+    occurence(vb, bOccurence);
+
+    cout << "similarity: " << similarity(va, bOccurence) << endl;
 }
 
